@@ -8,7 +8,8 @@ module Normalizr
       def normalize(*args, &block)
         options = Normalizr::OptionsParser.new(args, block)
 
-        prepend Module.new {
+        # Because prepend doesn't work with JRuby
+        # prepend Module.new {
           options.attributes.each do |method|
             define_method :"#{method}=" do |value|
               value = Normalizr.normalize(value, *options.pre)
@@ -16,7 +17,7 @@ module Normalizr
               super(value)
             end
           end
-        }
+        # }
       end
 
       # attribute normalizer compatibility
